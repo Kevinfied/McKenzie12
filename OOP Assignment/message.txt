@@ -1,0 +1,150 @@
+import java.util.*; //this gets ArrayList
+import java.util.Arrays;
+class GameWord{
+    //fields
+    private String content; int contentLength; ArrayList<String> TotalPermutation=new ArrayList<String>(0);
+    ArrayList<Integer> regPoint=new ArrayList<Integer>();
+    public static final int Right=1;public static final int Down=2;
+    int[] LetterValue={ 1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
+    /*
+    double letter score=21
+    triple letter score=31
+    double word score=22
+    triple word score=32
+    */
+    int[][] scrabbleBoard = {
+            {32, 00, 00, 21, 00, 00, 00, 32, 00, 00, 00, 21, 00, 00, 32},
+            {00, 22, 00, 00, 00, 31, 00, 00, 00, 31, 00, 00, 00, 22, 00},
+            {00, 00, 22, 00, 00, 00, 21, 00, 21, 00, 00, 00, 22, 00, 00},
+            {21, 00, 00, 22, 00, 00, 00, 21, 00, 00, 00, 22, 00, 00, 21},
+            {00, 00, 00, 00, 22, 00, 00, 00, 00, 00, 22, 00, 00, 00, 00},
+            {00, 31, 00, 00, 00, 31, 00, 00, 00, 31, 00, 00, 00, 31, 00},
+            {00, 00, 21, 00, 00, 00, 21, 00, 21, 00, 00, 00, 21, 00, 00},
+            {32, 00, 00, 21, 00, 00, 00, 22, 00, 00, 00, 21, 00, 00, 32},
+            {00, 00, 21, 00, 00, 00, 21, 00, 21, 00, 00, 00, 21, 00, 00},
+            {00, 31, 00, 00, 00, 31, 00, 00, 00, 31, 00, 00, 00, 31, 00},
+            {00, 00, 00, 00, 22, 00, 00, 00, 00, 00, 22, 00, 00, 00, 00},
+            {21, 00, 00, 22, 00, 00, 00, 21, 00, 00, 00, 22, 00, 00, 21},
+            {00, 00, 22, 00, 00, 00, 21, 00, 21, 00, 00, 00, 22, 00, 00},
+            {00, 22, 00, 00, 00, 31, 00, 00, 00, 31, 00, 00, 00, 22, 00},
+            {32, 00, 00, 21, 00, 00, 00, 32, 00, 00, 00, 21, 00, 00, 32}
+    };
+
+
+    //constructors
+    public GameWord(){
+    }
+    public GameWord(String content){
+     this.content=content;
+     contentLength=content.length();
+    }
+
+    int initialPoint(){
+        int totalPoint=0;
+        regPoint=new ArrayList<Integer>();
+        for(int i=0; i<contentLength; i++){
+            char curChar=content.charAt(i);
+            int asciiVal=(int) Character.toLowerCase(curChar)-97;
+            regPoint.add(LetterValue[asciiVal]);
+            totalPoint+=LetterValue[asciiVal];
+        }
+        return totalPoint;
+    }
+
+    int pointValue(int x, int y, int direction){
+        int total=initialPoint();
+        System.out.println(regPoint);
+        int tripleScore=0;
+        int doubleScore=0;
+        if(direction==Right){
+            for(int i=0; i<contentLength; i++){
+//                System.out.println(scrabbleBoard[14-y][x+i]);
+                if(scrabbleBoard[14-y][x+i]==21){
+                    total+=regPoint.get(i);
+                }
+                if(scrabbleBoard[14-y][x+i]==22){
+                    doubleScore+=1;
+                }
+                if(scrabbleBoard[14-y][x+i]==31){
+                    total+=2*regPoint.get(i);
+                }
+                if(scrabbleBoard[14-y][x+i]==32){
+                    tripleScore+=1;
+                }
+            }
+        }
+        if(direction==Down){
+            for(int i=0; i<contentLength; i++){
+//                System.out.println(scrabbleBoard[y-i][14-x]);
+                if(scrabbleBoard[y-i][14-x]==21){
+                    total+=regPoint.get(i);
+                }
+                if(scrabbleBoard[y-i][14-x]==22){
+                    doubleScore+=1;
+                }
+                if(scrabbleBoard[y-i][14-x]==31){
+                    total+=2*regPoint.get(i);
+                }
+                if(scrabbleBoard[y-i][14-x]==32){
+                    tripleScore+=1;
+                }
+            }
+        }
+        for(int i=0; i<tripleScore;i++){
+            total*=3;
+        }
+        for(int i=0; i<doubleScore;i++){
+            total*=2;
+        }
+
+
+        System.out.println(total);
+        return total;
+
+    }
+
+
+    //methods
+     public String reverse(){//check adding char if interfere with string
+         String reversedString="";
+         for(int i=contentLength-1; i>=0; i--){
+             reversedString+=content.charAt(i);
+        }
+        return reversedString;
+    }
+
+     boolean anagram(String otherWord){
+          char[] otherWordArr=otherWord.toCharArray();
+          char[] contentArr=content.toCharArray();
+          Arrays.sort(otherWordArr);
+          Arrays.sort(contentArr);
+          for(int i=0; i<contentLength; i++){
+              if(otherWordArr[i]!=contentArr[i]){
+                  return false;
+              }
+          }
+          return true;
+     }
+
+    void FindPermutation(String content, String newString, int curLength){
+        if(newString.length()==contentLength){
+            TotalPermutation.add(newString);
+            return;
+        }
+        for(int i=0; i<content.length(); i++){
+            FindPermutation(content.substring(0,i)+content.substring(i+1), newString+content.charAt(i), curLength+1);
+        }
+    }
+
+     ArrayList<String> permutations(){
+        TotalPermutation=new ArrayList<String>();
+        FindPermutation(content,"", 0);
+        return TotalPermutation;
+     }
+
+     @Override
+     public String toString(){
+        return content;
+     }
+
+}
