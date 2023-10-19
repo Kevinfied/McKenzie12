@@ -11,9 +11,9 @@
 import java.util.*;
 public class GameWord {
 
-    private String word;
+    private String contents;
 
-    String contents = this.word;
+    // String contents = this.word;
 
     /*
     Double Letter - 12
@@ -47,26 +47,26 @@ public class GameWord {
 
     public GameWord(String word) {
 
-        this.word = word;
+        this.contents = word;
     }
 
     
 
 
     public String reverse() {
-        return new StringBuilder(word).reverse().toString();
+        return new StringBuilder(contents).reverse().toString();
     }
 
     public boolean anagram (String otherWord) {
 
         // return true if the current word can be rewritten as the other word
 
-        if (word.length() != otherWord.length()) {
+        if (contents.length() != otherWord.length()) {
             return false;
         }
 
         else {
-            char[] wordArray = word.toCharArray();
+            char[] wordArray = contents.toCharArray();
             char[] otherWordArray = otherWord.toCharArray();
 
             Arrays.sort(wordArray);
@@ -78,6 +78,20 @@ public class GameWord {
         }
     }
 
+
+    public boolean anagram(GameWord otherWord) {
+        // return true if the current word can be rewritten as the other word
+
+        return anagram(otherWord.contents);
+
+
+    }
+
+
+
+
+
+/* 
     public int pointValue(int x, int y, int direction) {
 //        direction == 1 means RIGHT
 //        direction == 2 means DOWN
@@ -121,26 +135,51 @@ public class GameWord {
 
         return perm;
     }
+*/
 
-    public ArrayList recur(ArrayList<String> perm, String word, int index) {
-        if (index == word.length()) {
-            return perm;
-        }
-
-
-        else {
-            for (int i = 0; i < word.length(); i++) {
-                perm.add(word.charAt(i) + (recur(perm, word, index + 1)).toString());
+    public int pointValue(int x, int y, int direction) {
+        int[] vals = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
+        int points = 0;
+        int multiplier = 1;
+        for (int i = 0; i < contents.length(); i++) {
+            if (direction == 1) {
+                points += vals[contents.charAt(i)-'a'] * board[x][y + i] % 10;
+                multiplier *= board[x][y + i] / 10;
+            }
+            else {
+                points += vals[contents.charAt(i)-'a'] * board[x + i][y] % 10;
+                multiplier *= board[x + i][y] / 10;
             }
         }
+        return points * multiplier;
+    }
+
+    
+    public ArrayList permutations() {
+        ArrayList<String> perm = new ArrayList<String>();
+        recur(perm, contents, "");
         return perm;
     }
+
+    public void recur(ArrayList<String> perm, String word, String ret) {
+        if (word.length() == 0) {
+            perm.add(ret);
+        }
+
+        else {
+            for (int i=0; i<word.length(); i++) {
+                recur(perm, word.substring(0,i) + word.substring(i+1), ret+word.charAt(i));
+            }
+
+        }
+
+    }
+
+
 
     @Override
     public String toString() {
         return contents;
     }
-
-
 }
 
