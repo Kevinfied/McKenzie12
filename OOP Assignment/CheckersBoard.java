@@ -10,26 +10,80 @@
 import java.util.*;
 
 public class CheckersBoard {
-    // WHY IS THIS ACTUALLY HARD 😭
 
-    private int[][] board = new int[8][8];
 
-    public CheckersBoard() {
-        for (int i = 0; i < 8; i++) {
-            if (i % 2 == 0) {
-                board[0][i] = 1;
-                board[2][i] = 1;
-                board[6][i] = 2;
-            }
-            else {
-                board[1][i] = 1;
-                board[5][i] = 2;
-                board[7][i] = 2;
+    private int [][] board ={
+            {2,0,2,0,2,0,2,0},
+            {0,2,0,2,0,2,0,2},
+            {2,0,2,0,2,0,2,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,1,0,1,0,1,0,1},
+            {1,0,1,0,1,0,1,0},
+            {0,1,0,1,0,1,0,1}
+    };
+
+    private static final int BLACK = 1;
+    private static final int RED = 2;
+
+
+//    public boolean move() {
+//
+//    }
+
+    // question: do we pass in a string?
+    public int count(int color) {
+        int count = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j=0; j < board[i].length; j++) {
+                if (board[i][j] == color) {
+                    count++;
+                }
             }
         }
+        return count;
     }
 
 
+    /*
+    example
+
++---+---+---+---+---+---+---+---+
+| B |   | B |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   | B |   | B |   |   |   |   |
++---+---+---+---+---+---+---+---+
+| B |   | B |   | B |   | R |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   | R |   |   |   | B |   |
++---+---+---+---+---+---+---+---+
+|   | R |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+| R |   | R |   | R |   | R |   |
++---+---+---+---+---+---+---+---+
+|   | R |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+
+     */
+    public void display() {
+
+        for (int t = 0; t<17; t++) {
+            if (t % 2 == 0) {
+                System.out.println("+---+---+---+---+---+---+---+---+");
+            }
+
+            else {
+                for (int i=7; i>=0; i--){
+                    System.out.print("");
+
+            }
+        }
 
 
+
+
+    }
+}
 }
