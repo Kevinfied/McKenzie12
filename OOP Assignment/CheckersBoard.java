@@ -1,238 +1,70 @@
 //============================================================================
 // Name        : CheckersBoard.java
 // Author      : Kevin Xu
-// Version     : 1.0
-// Copyright   : AL UR CODE BELAONGS TO ME! !1 1
+// Version     : 4.0
 // Description : class CheckersBoard that is designed to be used to play a game of checkers.
+// There are 3 methods in this class: count, display, and move.
+// Count counts the number of pieces of a given color on the board (pass in 1 or 2).
+// Display prints out ASCII version of the board.
+// Move moves a piece from one square to another if it is valid and returns either true or false.
 //============================================================================
 
+class CheckersBoard {
 
-import java.util.*;
+    public static final int EMPTY = 0;
+    public static final int RED = 2;
+    public static final int BLACK = 1;
+    // private String path = "";
 
-public class CheckersBoard2 {
-
+    /*
+    The black pieces should be in rows 0-2, and red should be in rows 5-7.
+     */
 
     private int [][] board = {
-            {2,0,2,0,2,0,2,0},
-            {0,2,0,2,0,2,0,2},
-            {2,0,2,0,2,0,2,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},  
-            {0,1,0,1,0,1,0,1},
-            {1,0,1,0,1,0,1,0},
-            {0,1,0,1,0,1,0,1}
-    };
-
-    private String path = "";
-    private static final int OPEN = 0;
-    private static final int BLACK = 1;
-    private static final int RED = 2;
-
-    public int get(int x,int y){
-        if (x<=7 && y<=7 && y>=0) { // checks if out of bound
-            return board[x][y];
-        }
-        return -1;
-    }
-
-    public boolean move(int x1, int y1, int x2, int y2){
-        if(x1 == x2 && y1 == y2){ // in the case where they start when they finish, its invalid.
-            return false;
-        }
-        if((x1>7 || x1<0) || (y1>7 || y1<0) || (x2>7 || x2<0) || (y2>7 || y2<0)){ // if any of the values are out of bounds then invalid
-            return false;
-        }
-        int col = board[x1][y1];
-        int other = RED+BLACK-col;
-        int m = col==BLACK ? 1 : -1; // if Black then going up so +1 if red going down so -1
-        //checking 1 move jumps
-        if(x1+m == x2 && y1+1 == y2){
-            board[x1][y1] = OPEN;
-            board[x2][y2] = col;
-            return true;
-        }
-        else if(x1+m == x2 && y1-1 == y2){
-            board[x1][y1] = OPEN;
-            board[x2][y2] = col;
-            return true;
-        }
-        else{
-            //checking captures
-            capture(x1,y1,x2,y2,col,path);
-            String ans = path;
-            if(ans.length() == 0){ // if no suitable path then false
-                return false;
-            }
-            else{
-                //change start pos to OPEN and end pos with capturing piece
-                board[x1][y1] = OPEN;
-                board[x2][y2] = col;  //"2143" 03
-
-                if(path.length() == 6){ // if there are 3 jumps
-                    int cap1 = (x1+Integer.parseInt(path.substring(0,1)))/2; // getting the average of the next jump and current pos because that gets the square
-                    //in between which is the enemy piece.
-                    int cap2 = (y1+Integer.parseInt(path.substring(1,2)))/2;
-                    int cap3 = (Integer.parseInt(path.substring(0,1))+Integer.parseInt(path.substring(2,3)))/2;
-                    int cap4 = (Integer.parseInt(path.substring(1,2))+Integer.parseInt(path.substring(3,4)))/2;
-                    int cap5 = (Integer.parseInt(path.substring(2,3))+Integer.parseInt(path.substring(4,5)))/2;
-                    int cap6 = (Integer.parseInt(path.substring(3,4))+Integer.parseInt(path.substring(5,6)))/2;
-                    // enemy piece is captured so the squares that they are on all become open
-                    board[cap1][cap2] = OPEN;
-                    board[cap3][cap4] = OPEN;
-                    board[cap5][cap6] = OPEN;
-                }
-                if(path.length() == 4){
-                    int caP1 = (x1+Integer.parseInt(path.substring(0,1)))/2;
-                    int caP2 = (y1+Integer.parseInt(path.substring(1,2)))/2;
-                    int caP3 = (Integer.parseInt(path.substring(0,1))+Integer.parseInt(path.substring(2,3)))/2;
-                    int caP4 = (Integer.parseInt(path.substring(1,2))+Integer.parseInt(path.substring(3,4)))/2;
-                    board[caP1][caP2] = OPEN;
-                    board[caP3][caP4] = OPEN;
-                }
-            }
-            if(path.length()== 2){
-                int cAP1 = (x1+Integer.parseInt(path.substring(0,1)))/2;
-                int cAP2 = (y1+Integer.parseInt(path.substring(1,2)))/2;
-                board[cAP1][cAP2] = OPEN;
-            }
-            // reseting path cuz its a global
-            path = "";
-            return true;
-        }
-    }
-
-
-    public void capture(int x1, int y1, int x2, int y2,int col, String path) {
-        if (x1 == x2 && y1 == y2) { //useless statment just there because void type so nothing to return when base case is met.
-            this.path = path;
-        } else {
-            if (col == BLACK) {
-                if (get(x1 + 1, y1 + 1) == RED && get(x1 + 2, y1 + 2) == OPEN) { // checking if adjacent square is enemy and square next to that is open.
-                    capture(x1 + 2, y1 + 2, x2, y2, BLACK, path + String.valueOf(x1 + 2) + String.valueOf(y1 + 2));
-                }
-                if (get(x1 + 1, y1 - 1) == RED && get(x1 + 2, y1 - 2) == OPEN) {
-                    capture(x1 + 2, y1 - 2, x2, y2, BLACK, path + String.valueOf(x1 + 2) + String.valueOf(y1 - 2));
-                }
-            } else if (col == RED) {
-                if (get(x1 - 1, y1 + 1) == BLACK && get(x1 - 2, y1 + 2) == OPEN) {
-                    capture(x1 - 2, y1 + 2, x2, y2, BLACK, path + String.valueOf(x1 - 2) + String.valueOf(y1 + 2));
-                }
-                if (get(x1 - 1, y1 - 1) == BLACK && get(x1 - 2, y1 - 2) == OPEN) {
-                    capture(x1 - 2, y1 - 2, x2, y2, BLACK, path + String.valueOf(x1 - 2) + String.valueOf(y1 - 2));
-                }
-            }
-        }
-    }
-//    public boolean move(int x1, int y1, int x2, int y2) {
-//        int currentPlayer = board[x1][y1]; // Determine current player based on the piece being moved
-//
-//        if (validMove(x1, y1, x2, y2, currentPlayer)) {
-//            // Update the board with the new position
-//            board[x2][y2] = board[x1][y1];
-//            board[x1][y1] = 0;
-//
-//            // If it's a capture, remove the captured piece
-//            if (Math.abs(x1 - x2) == 2 && Math.abs(y1 - y2) == 2) {
-//                int midX = (x1 + x2) / 2;
-//                int midY = (y1 + y2) / 2;
-//                board[midX][midY] = 0;
-//            }
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//
-//
-//
-////    public boolean valid() {
-//        /* valid moves:
-//            Basic move:
-//            any piece can move to any open diagonally adjacent square:
-//            black pieces advance up, and red pieces advance down.
-//
-//            Capture:
-//            A piece can capture an opponent's piece by jumping over it to an empty square immediately beyond.
-//
-//            If after capturing one enemy the piece is set-up to capture another it may.
-//            When the move method is called only the start of the move and the end of the move
-//            specified your program must be consider multiple captures when evaluating if a move is valid or not.
-//
-//            Kings:
-//            for the sake of simplicity, we will ignore the effects of kings in this class.
-//        */
-//
-//
-//    //    }
-//    public boolean validMove(int x1, int y1, int x2, int y2, int currentPlayer) {
-//        // Check if the start and end positions are within bounds
-//        if (x1 < 0 || x1 > 7 || y1 < 0 || y1 > 7 ||
-//                x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
-//            return false;
-//        }
-//
-//        // Check if the end position is empty
-//        if (board[x2][y2] != 0) {
-//            return false;
-//        }
-//
-//        // Check if the move is diagonal
-//        if (Math.abs(x1 - x2) != 1 || Math.abs(y1 - y2) != 1) {
-//            return false;
-//        }
-//
-//        // Check if the current player is trying to move their own piece
-//        if (board[x1][y1] != currentPlayer) {
-//            return false;
-//        }
-//
-//        // Check if the piece is moving in the correct direction based on player
-//        if (currentPlayer == 1 && y2 <= y1) {
-//            return false;
-//        } else if (currentPlayer == 2 && y2 >= y1) {
-//            return false;
-//        }
-//
-//        // Check if a capture is being attempted
-//        if (Math.abs(x1 - x2) == 2 && Math.abs(y1 - y2) == 2) {
-//            int midX = (x1 + x2) / 2;
-//            int midY = (y1 + y2) / 2;
-//
-//            // Check if the middle position contains an opponent's piece
-//            if (board[midX][midY] != (3 - currentPlayer)) {
-//                return false;
-//            }
-//        }
-//
-//        return true;
-//    }
+        // 0, 0
+        {0, 1, 0, 1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1, 0, 1, 0},
+        {0, 1, 0, 1, 0, 1, 0, 1},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {2, 0, 2, 0, 2, 0, 2, 0},
+        {0, 2, 0, 2, 0, 2, 0, 2},
+        {2, 0, 2, 0, 2, 0, 2, 0}
+                            // 8, 8
+};
 
 
     public int count(int color) {
+        // loop thru every square and count how many pieces are of the given color
         int count = 0;
-        for (int i = 0; i < board.length; i++) {
-            for (int j=0; j < board[i].length; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j=0; j < 8; j++) {
                 if (board[i][j] == color) {
                     count++;
                 }
             }
         }
+
         return count;
     }
 
     public void display() {
         System.out.println("+---+---+---+---+---+---+---+---+");
+
+        // loop thru every square and print it
         for(int i=0; i<8; i++){
             System.out.print("|");
             for(int j=0; j<8; j++){
+                // if black print B
+
                 if (board[i][j] == BLACK){
                     System.out.print(" B ");
                 }
+                // if red print R
                 else if (board[i][j] == RED){
                     System.out.print(" R ");
                 }
+                // if empty print space
                 else{
                     System.out.print("   ");
                 }
@@ -243,8 +75,149 @@ public class CheckersBoard2 {
         }
     }
 
-    public int getColour(int x, int y){
-        return board[x][y];
+
+    public boolean valid(int x, int y) {
+        // a square is valid iff it is on the board and empty
+        boolean flag = (x>=0 && x<8 && y>=0 && y<8 && board[x][y]==0);
+        return flag;
     }
 
+
+    public int get(int x,int y){
+        // get color of the piece at x,y
+        if(x<=7 && y<=7 && y>=0 && x>=0){
+            return board[x][y];
+        }
+            return -1;
+    }
+
+    // BASIC MOVING
+    public boolean basicMove(int x1, int y1, int x2, int y2) {
+        int col = board[x1][y1];
+        // int other = RED + BLACK - col;
+
+        int moving = col == BLACK ? 1 : -1; // if Black then going up so +1 if red going down so -1
+
+        // basic moving
+        if (valid(x1 + moving, y1 + 1) && x1 + moving == x2 && y1 + 1 == y2) {
+            // if the target adjacent square is empty, move there
+            board[x1][y1] = EMPTY;
+            board[x2][y2] = col;
+            return true;
+        } 
+        else if (valid(x1 + moving, y1 - 1) && x1 + moving == x2 && y1 - 1 == y2) {
+            board[x1][y1] = EMPTY;
+            board[x2][y2] = col;
+            return true;
+        }
+
+        // if cant move to neither of the adjacent squares, cannot make basic move
+        return false;
+
+    }
+
+    // call this method to move a piece
+    public boolean move(int x1, int y1, int x2, int y2) {
+        
+        int col = board[x1][y1];
+        // int other = RED + BLACK - col;
+
+        // ENTRY CONDITIONS
+        if (x1 == x2 && y1 == y2) { 
+            return false; // didnt move
+        }
+
+        if (x1 < 0 || x1 > 7 || y1 < 0 || y1 > 7) {
+            return false; // out of bounds
+        }
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false; // out of bounds
+        }
+
+        if (board[x2][y2] != EMPTY) {
+            return false; // destination not empty
+        }
+
+        if (board[x1][y1] == EMPTY) {
+            return false; // source is empty
+        }
+
+        if (col == RED) {
+            if (x1 >= x2) {
+                return false; // red can only move down
+            }
+        }
+
+        else {
+            if (x1 <= x2) {
+                return false; // black can only move up
+            }
+        }
+
+        if (((x1 + y1) % 2) != ((x2 + y2) % 2)) {
+            return false; // move not on same color square. impossible
+        }
+
+
+        // if all of the entry conditions are met, then we can move
+        return move(x1, y1, x2, y2, true);
+    }
+
+    // |
+    // V
+
+    public boolean move(int x1, int y1, int x2, int y2, boolean basic) {
+        
+        int col = board[x1][y1];
+        int other = RED + BLACK - col;
+
+        int moving = col == BLACK ? 1 : -1; // if Black then going up so +1 if red going down so -1
+
+        // basic moving
+        if (basicMove(x1, y1, x2, y2) && basic) {
+            return true;
+        }
+
+        // base case
+        if (x1 == x2 && y1 == y2) { 
+            return true; // position reached
+        }
+
+
+        // recursive case
+        // check if the piece can jump
+        if (valid(x1+(moving*2), y1+2) && board[x1+moving][y1+1] == other) {
+            // if the target adjacent square is empty, move there
+            board[x1][y1] = EMPTY;
+            board[x1+moving][y1+1] = EMPTY;
+            board[x1+(moving*2)][y1+2] = col;
+
+            // if the move succeeded, return true
+            if (move(x1+(moving*2), y1+2, x2, y2, false)) {
+                return true;
+            }
+
+            // if the move failed, undo it
+            board[x1][y1] = col;
+            board[x1+moving][y1+1] = other;
+            board[x1+(moving*2)][y1+2] = EMPTY;
+        } 
+
+        else if (valid(x1+(moving*2), y1-2) && board[x1+moving][y1-1] == other) {
+            // other direction
+            board[x1][y1] = EMPTY;
+            board[x1+moving][y1-1] = EMPTY;
+            board[x1+(moving*2)][y1-2] = col;
+            if (move(x1+(moving*2), y1-2, x2, y2, false)) {
+                return true;
+            }
+            board[x1][y1] = col;
+            board[x1+moving][y1-1] = other;
+            board[x1+(moving*2)][y1-2] = EMPTY;
+        }
+
+
+        return false;
+    }
 }
