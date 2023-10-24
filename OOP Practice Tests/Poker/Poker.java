@@ -1,4 +1,4 @@
-// Kevinfied
+// Kevin Xu
 import java.util.*;
 
 public class Poker{
