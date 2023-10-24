@@ -1,3 +1,4 @@
+// Kevin Xu
 class Rect {
 
     private double x, y, width, height;
