@@ -1,4 +1,3 @@
-// Kevin Xu
 class Rect {
 
     private double x, y, width, height;
@@ -46,13 +45,23 @@ class Rect {
         this.height *= amount;
     }
 
+    public boolean xOverlap(Rect rectangle) {
+        return (this.x + this.width >= rectangle.x && this.x <= rectangle.x + rectangle.width);
+    }
+
+    public boolean yOverlap(Rect rectangle) {
+        return (this.y + this.height >= rectangle.y && this.y <= rectangle.y + rectangle.height);
+    }
 
     public boolean overlaps(Rect rectangle) {
+        // double[] rectangleCenter = rectangle.centre();
+        // double[] thisCenter = this.centre();
+
 
         // return (this.x + this.width >= rectangle.x && this.x <= rectangle.x + rectangle.width) && (this.y + this.height >= rectangle.y && this.y <= rectangle.y + rectangle.height);
-        return (this.contains(rectangle.x, rectangle.y) || this.contains(rectangle.x + rectangle.width, rectangle.y) || this.contains(rectangle.x, rectangle.y + rectangle.height) || this.contains(rectangle.x + rectangle.width, rectangle.y + rectangle.height)) || (rectangle.contains(this.x, this.y) || rectangle.contains(this.x + this.width, this.y) || rectangle.contains(this.x, this.y + this.height) || rectangle.contains(this.x + this.width, this.y + this.height));
+        // return (this.contains(rectangleCenter[0], rectangleCenter[1]) || rectangle.contains(thisCenter[0], thisCenter[1]) ||this.contains(rectangle.x, rectangle.y) || this.contains(rectangle.x + rectangle.width, rectangle.y) || this.contains(rectangle.x, rectangle.y + rectangle.height) || this.contains(rectangle.x + rectangle.width, rectangle.y + rectangle.height)) || (rectangle.contains(this.x, this.y) || rectangle.contains(this.x + this.width, this.y) || rectangle.contains(this.x, this.y + this.height) || rectangle.contains(this.x + this.width, this.y + this.height));
 
-
+        return (this.xOverlap(rectangle) && this.yOverlap(rectangle)) || (rectangle.xOverlap(this) && rectangle.yOverlap(this));
     }
 
     public boolean contains(double x2, double y2) {
