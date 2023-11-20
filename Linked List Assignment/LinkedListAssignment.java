@@ -3,7 +3,7 @@
  * Kevin Xu
  */
 
-
+import java.util.*;
 
 class LinkedListAssignment {
     public static void main(String[] args) {
@@ -37,32 +37,29 @@ class LList{
 
     // PROBLEM 1
     public void push(int v){
-
-        // no nodes
+        // edge case - no nodes
         if (head == null && tail == null) {
             LNode tmp = new LNode(null, v, null);
             head = tmp;
             tail = tmp;
         }
+        // normal
         else {
             LNode tmp = new LNode(null, v, head);
             head.setPrev(tmp);
             head = tmp;
         }
-
-
     }
 
     public int pop() {
         int ret = head.getVal();
         head = head.getNext();
-
+        head.setPrev(null);
         return ret;
     }
 
 
     // PROBLEM 2
-
     public void enqueue(int v){
 
         if (head == null && tail == null) {
@@ -78,16 +75,31 @@ class LList{
 
     }
 
-
+    // same as pop (?)
     public int dequeue() {
         int ret = head.getVal();
         head = head.getNext();
-
+        head.setPrev(null);
         return ret;
     }
 
+    // PROBLEM 3
 
-
+    @Override
+    public void delete(LNode node) {
+        if (node == head) {
+            head = head.getNext();
+            head.setPrev(null);
+        }
+        else if (node == tail) {
+            tail = tail.getPrev();
+            tail.setNext(null);
+        }
+        else {
+            node.getPrev().setNext(node.getNext());
+            node.getNext().setPrev(node.getPrev());
+        }
+    }
 
 
 
