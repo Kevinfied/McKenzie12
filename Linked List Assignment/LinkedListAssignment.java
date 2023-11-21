@@ -10,19 +10,23 @@ class LinkedListAssignment {
         LList nums = new LList();
 
         nums.push(1);
-        nums.push(2);
-        nums.push(3);
-        nums.push(4);
-        nums.push(5);
-        nums.push(6);
+        // nums.push(2);
+        // nums.push(3);
+        // nums.push(4);
+        // nums.push(5);
+        // nums.push(6);
 
         System.out.println(nums);
-        System.out.println(nums.pop());
-        System.out.println(nums);
+        // System.out.println(nums.pop());
+        // System.out.println(nums);
         System.out.println(nums.dequeue());
+        System.out.println(nums);
+        System.out.println(nums.getTail());
         nums.enqueue(5);
         nums.enqueue(6);
         System.out.println(nums);
+        System.out.println(nums.getTail());
+
     }
 }
 
@@ -53,11 +57,26 @@ class LList{
 
     public int pop() {
         int ret = head.getVal();
-        head = head.getNext();
-        head.setPrev(null);
-        return ret;
+
+        // edge case - one node
+        if (head == tail) {
+            head = null;
+            tail = null;
+            return ret;
+        }
+
+
+
+        else { // normal
+            head = head.getNext();
+            head.setPrev(null);
+            return ret;
+        }
+
     }
 
+
+    
 
     // PROBLEM 2
     public void enqueue(int v){
@@ -78,28 +97,64 @@ class LList{
     // same as pop (?)
     public int dequeue() {
         int ret = head.getVal();
-        head = head.getNext();
-        head.setPrev(null);
-        return ret;
+
+
+        // edge case - one node
+        if (head == tail) {
+            head = null;
+            tail = null;
+            return ret;
+        }
+
+        else { // normal
+            head = head.getNext();
+            head.setPrev(null);
+            return ret;
+        }
     }
 
     // PROBLEM 3
 
-    @Override
-    public void delete(LNode node) {
-        if (node == head) {
-            head = head.getNext();
-            head.setPrev(null);
+
+     public void delete(LNode node) {
+         if (node == head) {
+             head = head.getNext();
+             head.setPrev(null);
+         }
+         else if (node == tail) {
+             tail = tail.getPrev();
+             tail.setNext(null);
+         }
+         else {
+             node.getPrev().setNext(node.getNext());
+             node.getNext().setPrev(node.getPrev());
+         }
+     }
+
+     public void delete(int num) {
+
+        LNode tmp;
+
+        while (true) {
+
+            tmp = head;
+
+            while (tmp != null) {
+                if (tmp.getVal() == num) {
+                    delete(tmp);
+                    break;
+                }
+                tmp = tmp.getNext();
+            }
+
+            if (tmp == null) {
+                break;
+            }
+
+
         }
-        else if (node == tail) {
-            tail = tail.getPrev();
-            tail.setNext(null);
-        }
-        else {
-            node.getPrev().setNext(node.getNext());
-            node.getNext().setPrev(node.getPrev());
-        }
-    }
+
+     }
 
 
 
@@ -120,6 +175,11 @@ class LList{
         }
         return "{" + ans +"}";
     }
+
+    public LNode getTail() {
+        return tail;
+    }
+
 }
 
 class LNode{
