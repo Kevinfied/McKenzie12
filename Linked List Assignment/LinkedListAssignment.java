@@ -10,11 +10,11 @@ class LinkedListAssignment {
         LList nums = new LList();
 
         nums.push(1);
-         nums.push(2);
-         nums.push(3);
-         nums.push(4);
-         nums.push(5);
-         nums.push(6);
+        nums.push(2);
+        nums.push(3);
+        nums.push(4);
+        nums.push(5);
+        nums.push(6);
 
         System.out.println(nums);
         // System.out.println(nums.pop());
@@ -113,9 +113,9 @@ class LList{
         }
     }
 
+
+
     // PROBLEM 3
-
-
     public void delete(LNode node) {
         if (node == head) {
             head = head.getNext();
@@ -145,26 +145,32 @@ class LList{
 
     }
 
-
     public void deleteAt(int index) {
 
+        LNode tmp = head;
         for (int i = 0; i < index; i++) {
-            head = head.getNext();
-
-            head.setPrev(null);
+            tmp = tmp.getNext();
         }
+
+        delete(tmp);
+
     }
 
-    // PROBLEM 4
 
+
+    // PROBLEM 4
     public void insertAt(int index, int num) {
+
+
 
     }
 
 
     // PROBLEM 5
-
     public void removeDuplicates() {
+
+
+
 
     }
 
@@ -173,17 +179,29 @@ class LList{
     // PROBLEM 6
     public void reverse() {
 
+
+
+
+        
     }
+
 
 
     // PROBLEM 7
-    // ?????
+    public LList clone(LList list) {
+        LList nlist = new LList();
+        LNode cur = head;
 
-    public void clone(LList list) {
+        while (cur != null) {
 
+            nlist.enqueue(cur.getVal());
+
+            cur = cur.getNext();
+
+        }
+
+        return nlist;
     }
-
-
 
 
     // OTHER METHODS
