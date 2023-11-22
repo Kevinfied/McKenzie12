@@ -10,11 +10,11 @@ class LinkedListAssignment {
         LList nums = new LList();
 
         nums.push(1);
-        // nums.push(2);
-        // nums.push(3);
-        // nums.push(4);
-        // nums.push(5);
-        // nums.push(6);
+         nums.push(2);
+         nums.push(3);
+         nums.push(4);
+         nums.push(5);
+         nums.push(6);
 
         System.out.println(nums);
         // System.out.println(nums.pop());
@@ -76,7 +76,7 @@ class LList{
     }
 
 
-    
+
 
     // PROBLEM 2
     public void enqueue(int v){
@@ -116,50 +116,77 @@ class LList{
     // PROBLEM 3
 
 
-     public void delete(LNode node) {
-         if (node == head) {
-             head = head.getNext();
-             head.setPrev(null);
-         }
-         else if (node == tail) {
-             tail = tail.getPrev();
-             tail.setNext(null);
-         }
-         else {
-             node.getPrev().setNext(node.getNext());
-             node.getNext().setPrev(node.getPrev());
-         }
-     }
+    public void delete(LNode node) {
+        if (node == head) {
+            head = head.getNext();
+            head.setPrev(null);
+        }
+        else if (node == tail) {
+            tail = tail.getPrev();
+            tail.setNext(null);
+        }
+        else {
+            node.getPrev().setNext(node.getNext());
+            node.getNext().setPrev(node.getPrev());
+        }
+    }
 
-     public void delete(int num) {
+    public void delete(int num) {
 
-        LNode tmp;
 
-        while (true) {
-
-            tmp = head;
-
-            while (tmp != null) {
-                if (tmp.getVal() == num) {
-                    delete(tmp);
-                    break;
-                }
-                tmp = tmp.getNext();
+        LNode tmp = head;
+        while (tmp != null) {
+            if (tmp.getVal() == num) {
+                delete(tmp);
+                return;
             }
-
-            if (tmp == null) {
-                break;
-            }
-
-
+            tmp = tmp.getNext();
         }
 
-     }
+    }
+
+
+    public void deleteAt(int index) {
+
+        for (int i = 0; i < index; i++) {
+            head = head.getNext();
+
+            head.setPrev(null);
+        }
+    }
+
+    // PROBLEM 4
+
+    public void insertAt(int index, int num) {
+
+    }
+
+
+    // PROBLEM 5
+
+    public void removeDuplicates() {
+
+    }
+
+
+
+    // PROBLEM 6
+    public void reverse() {
+
+    }
+
+
+    // PROBLEM 7
+    // ?????
+
+    public void clone(LList list) {
+
+    }
 
 
 
 
-
+    // OTHER METHODS
     public String toString(){
         String ans = "";
         LNode tmp = head;
