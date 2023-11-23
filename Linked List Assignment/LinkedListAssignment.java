@@ -9,23 +9,34 @@ class LinkedListAssignment {
     public static void main(String[] args) {
         LList nums = new LList();
 
-        nums.push(1);
-        nums.push(2);
-        nums.push(3);
-        nums.push(4);
-        nums.push(5);
-        nums.push(6);
+//        nums.push(1);
+//        nums.push(2);
+//        nums.push(3);
+//        nums.push(4);
+//        nums.push(5);
+//        nums.push(6);
+//
+//        System.out.println(nums);
+//        // System.out.println(nums.pop());
+//        // System.out.println(nums);
+//        System.out.println(nums.dequeue());
+//        System.out.println(nums);
+//        System.out.println(nums.getTail());
+//        nums.enqueue(5);
+//        nums.enqueue(6);
+//        System.out.println(nums);
+//        System.out.println(nums.getTail());
 
+//        for (int i = 0; i < 10; i++) {
+//            nums.enqueue(i);
+//        }
+        nums.enqueue(14);
+
+        nums.sortedInsert(7);
+        nums.sortedInsert(13);
+        nums.sortedInsert(0);
         System.out.println(nums);
-        // System.out.println(nums.pop());
-        // System.out.println(nums);
-        System.out.println(nums.dequeue());
-        System.out.println(nums);
-        System.out.println(nums.getTail());
-        nums.enqueue(5);
-        nums.enqueue(6);
-        System.out.println(nums);
-        System.out.println(nums.getTail());
+
 
     }
 }
@@ -159,9 +170,20 @@ class LList{
 
 
     // PROBLEM 4
-    public void insertAt(int index, int num) {
+    public void sortedInsert(int num) {
 
+        LNode tmp = head;
+        while (tmp != null) {
+            if (tmp.getVal() > num) {
+                LNode n = new LNode(tmp.getPrev(), num, tmp);
+                tmp.getPrev().setNext(n);
+                tmp.setPrev(n);
+                return;
+            }
+            tmp = tmp.getNext();
+        }
 
+        enqueue(num);
 
     }
 
@@ -169,6 +191,23 @@ class LList{
     // PROBLEM 5
     public void removeDuplicates() {
 
+        if (head == null) {
+            return;
+        }
+
+        
+
+        while (true) {
+
+
+            while (true) {
+
+
+
+
+            }
+
+        }
 
 
 
@@ -178,11 +217,17 @@ class LList{
 
     // PROBLEM 6
     public void reverse() {
+        LList temp = new LList();
+        LNode cur = head;
 
+        while (cur != null) {
+            temp.push(cur.getVal());
+            cur = cur.getNext();
+        }
 
+        head = temp.getHead();
+        tail = temp.getTail();
 
-
-        
     }
 
 
@@ -221,6 +266,9 @@ class LList{
         return "{" + ans +"}";
     }
 
+    public LNode getHead() {
+        return head;
+    }
     public LNode getTail() {
         return tail;
     }
@@ -261,6 +309,8 @@ class LNode{
     public void setPrev(LNode p){
         prev = p;
     }
+
+
 
     public String toString(){
         return ""+val;
