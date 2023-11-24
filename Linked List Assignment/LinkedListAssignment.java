@@ -27,16 +27,32 @@ class LinkedListAssignment {
 //        System.out.println(nums);
 //        System.out.println(nums.getTail());
 
-//        for (int i = 0; i < 10; i++) {
-//            nums.enqueue(i);
-//        }
-        nums.enqueue(14);
+        for (int i=10; i>0; i--) {
+            nums.enqueue(i);
+            nums.enqueue(i);
+        }
+
+//        nums.enqueue(14);
 
         nums.sortedInsert(7);
         nums.sortedInsert(13);
         nums.sortedInsert(0);
+        nums.sortedInsert(13);
+        System.out.println(nums);
+        nums.removeDuplicates();
         System.out.println(nums);
 
+        nums.reverse();
+        System.out.println(nums);
+
+        LList nums2 = nums.clone();
+        nums2.deleteAt(4);
+        System.out.println(nums2);
+        nums2.delete(9);
+        System.out.println(nums2);
+        nums2.delete(11);
+        System.out.println(nums2);
+        
 
     }
 }
@@ -50,7 +66,7 @@ class LList{
     }
 
 
-    // PROBLEM 1
+// PROBLEM 1 -----------------------------------------------------------------------------------------------------------
     public void push(int v){
         // edge case - no nodes
         if (head == null && tail == null) {
@@ -75,21 +91,17 @@ class LList{
             tail = null;
             return ret;
         }
-
-
-
         else { // normal
             head = head.getNext();
             head.setPrev(null);
             return ret;
         }
-
     }
 
 
 
 
-    // PROBLEM 2
+// PROBLEM 2 -----------------------------------------------------------------------------------------------------------
     public void enqueue(int v){
 
         if (head == null && tail == null) {
@@ -126,7 +138,7 @@ class LList{
 
 
 
-    // PROBLEM 3
+// PROBLEM 3 -----------------------------------------------------------------------------------------------------------
     public void delete(LNode node) {
         if (node == head) {
             head = head.getNext();
@@ -169,53 +181,66 @@ class LList{
 
 
 
-    // PROBLEM 4
+// PROBLEM 4 -----------------------------------------------------------------------------------------------------------
     public void sortedInsert(int num) {
+        // insert into a sorted list. in ascending order from tail to head
+        // {6, 5, 4, 3, 2, 1}
 
         LNode tmp = head;
-        while (tmp != null) {
-            if (tmp.getVal() > num) {
-                LNode n = new LNode(tmp.getPrev(), num, tmp);
-                tmp.getPrev().setNext(n);
-                tmp.setPrev(n);
-                return;
-            }
-            tmp = tmp.getNext();
+
+        if (head == null) {
+            enqueue(num);
+            return;
         }
 
-        enqueue(num);
+        if (num > head.getVal()) {
+            push(num);
+            return;
+        }
+
+        if (num < tail.getVal()) {
+            enqueue(num);
+            return;
+        }
+
+        while (tmp != null) {
+            if (tmp.getVal() < num) {
+                LNode tmpNode = new LNode(tmp.getPrev(), num, tmp);
+                tmp.getPrev().setNext(tmpNode);
+                tmp.setPrev(tmpNode);
+                return;
+            }
+            else {
+                tmp = tmp.getNext();
+            }
+        }
 
     }
 
 
-    // PROBLEM 5
+// PROBLEM 5 -----------------------------------------------------------------------------------------------------------
     public void removeDuplicates() {
 
         if (head == null) {
             return;
         }
 
-        
-
-        while (true) {
-
-
-            while (true) {
-
-
-
-
+        LNode tmp = head;
+        while (tmp != null) {
+            LNode tmp2 = tmp.getNext();
+            while (tmp2 != null) {
+                if (tmp.getVal() == tmp2.getVal()) {
+                    delete(tmp2);
+                }
+                tmp2 = tmp2.getNext();
             }
-
+            tmp = tmp.getNext();
         }
-
-
 
     }
 
+// PROBLEM 6 -----------------------------------------------------------------------------------------------------------
 
-
-    // PROBLEM 6
     public void reverse() {
         LList temp = new LList();
         LNode cur = head;
@@ -230,10 +255,8 @@ class LList{
 
     }
 
-
-
-    // PROBLEM 7
-    public LList clone(LList list) {
+// PROBLEM 7 -----------------------------------------------------------------------------------------------------------
+    public LList clone() {
         LList nlist = new LList();
         LNode cur = head;
 
@@ -248,6 +271,7 @@ class LList{
         return nlist;
     }
 
+// ---------------------------------------------------------------------------------------------------------------------
 
     // OTHER METHODS
     public String toString(){
