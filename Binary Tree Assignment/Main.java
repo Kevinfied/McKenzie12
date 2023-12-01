@@ -1,3 +1,6 @@
+
+import java.util.*;
+
 public class Main {
     public static void main(String []args){
 
@@ -51,7 +54,7 @@ class BTree{
         }
     }
 
-
+// QUESTION 1 - depth
     public int depth(int num) { // takes an integer and returns the depth of where its found.
                                 // returns -1 if not found.
 
@@ -74,13 +77,72 @@ class BTree{
         return -1;
     }
 
-
+// QUESTION 2 - display
     public void display() {
+
+    }
+
+
+// QUESTION 3 - countLeaves
+    public int countLeaves() {
+        return countLeaves(root);
+    }
+
+    public int countLeaves(BNode branch) {
+        if (branch == null) {
+            return 0;
+        }
+        if (branch.getLeft() == null && branch.getRight() == null) {
+            return 1;
+        }
+        return countLeaves(branch.getLeft()) + countLeaves(branch.getRight());
+    }
+
+// QUESTION 4 - height
+    public int height() {
+        return height(root);
+    }
+
+    public int height(BNode branch) {
+        if (branch == null) {
+            return 0;
+        }
+        return 1 + Math.max(height(branch.getLeft()), height(branch.getRight()));
+    }
+
+// QUESTION 5 - isAncestor
+    public boolean isAncestor(int a, int b) {
+
+        BNode ancestor = find(a);
         
+        if (find(ancestor, b) != null) {
+            return true;
+        }
+        
+        return false;
     }
 
 
 
+    public BNode find(int val) {
+        return find(root, val);
+    }
+
+    public BNode find(BNode branch, int val) {
+        if (branch == null || branch.getVal() == val) {
+            return branch;
+        }
+
+        else if (val < branch.getVal()) {
+            return find(branch.getLeft(), val);
+        }
+
+        else if (val > branch.getVal()) {
+            return find(branch.getRight(), val);
+        }
+
+        return null;
+    }
 
     @Override
     public String toString(){
@@ -109,15 +171,16 @@ class BNode{
     public int getVal(){
         return val;
     }
+    public void setVal(int v){
+        val=v;
+    }
     public BNode getLeft(){
         return left;
     }
     public BNode getRight(){
         return right;
     }
-    public void setVal(int v){
-        val=v;
-    }
+
     public void setLeft(BNode lf){
         left=lf;
     }
