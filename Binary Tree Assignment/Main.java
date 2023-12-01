@@ -5,16 +5,32 @@ public class Main {
     public static void main(String []args){
 
         BTree oak = new BTree();
-        oak.add(50);
-        oak.add(30);
-        oak.add(80);
-        oak.add(40);
-        oak.add(100);
-        oak.add(70);
-        oak.add(60);
-        oak.add(75);
-        oak.add(35);
-        oak.add(37);
+//        oak.add(50);
+//        oak.add(30);
+//        oak.add(80);
+//        oak.add(40);
+//        oak.add(100);
+//        oak.add(70);
+//        oak.add(60);
+//        oak.add(75);
+//        oak.add(35);
+//        oak.add(37);
+
+        oak.add(4);
+        oak.add(2);
+        oak.add(6);
+        oak.add(1);
+        oak.add(3);
+        oak.add(5);
+        oak.add(7);
+
+        System.out.println(oak);
+//        System.out.println(oak.preOrder(oak.getRoot()));
+//        System.out.println(oak.postOrder(oak.getRoot()));
+//        oak.countLeaves(oak.getRoot());
+//       System.out.println(oak.Height(oak.getRoot()));
+        System.out.println(oak.isAncestor(2, 1));
+        System.out.println(oak.countLeaves(oak.getRoot()));
         System.out.println(oak);
     }
 }
@@ -121,6 +137,36 @@ class BTree{
         
         return false;
     }
+    
+// QUESTION 6 - delete
+
+//    public void delete(int val) {
+//        root = delete(root, val);
+//
+//    }
+//
+//    public BNode delete(BNode branch, int val) {
+//        if (branch == null) {
+//            return null;
+//        }
+//        if (val < branch.getVal()) {
+//            branch.setLeft(delete(branch.getLeft(), val));
+//        }
+//        else if (val > branch.getVal()) {
+//            branch.setRight(delete(branch.getRight(), val));
+//        }
+//        else {
+//            if (branch.getLeft() == null) {
+//                return branch.getRight();
+//            }
+//            else if (branch.getRight() == null) {
+//                return branch.getLeft();
+//            }
+//            branch.setVal(min(branch.getRight()));
+//            branch.setRight(delete(branch.getRight(), branch.getVal()));
+//        }
+//        return branch;
+//    }
 
 
 
@@ -154,6 +200,10 @@ class BTree{
             return "";
         }
         return stringify(branch.getLeft()) + branch.getVal()+", "+ stringify(branch.getRight());
+    }
+
+    public BNode getRoot() {
+        return root;
     }
 
 }
