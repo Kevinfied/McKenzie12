@@ -1,21 +1,23 @@
 
 import java.util.*;
+import java.io.*;
 
 public class Main {
     public static void main(String []args){
-
         BTree oak = new BTree();
-//        oak.add(50);
-//        oak.add(30);
-//        oak.add(80);
-//        oak.add(40);
-//        oak.add(100);
-//        oak.add(70);
-//        oak.add(60);
-//        oak.add(75);
-//        oak.add(35);
-//        oak.add(37);
+        BTree spruce = new BTree();
 
+        oak.add(10);
+        oak.add(15);
+        oak.add(3);
+        oak.add(15);
+        oak.add(11);
+        oak.add(17);
+        oak.add(7);
+//        oak.graph();
+        System.out.println("Leaves: " + oak.countLeaves());
+
+        /*
         oak.add(4);
         oak.add(2);
         oak.add(6);
@@ -23,20 +25,47 @@ public class Main {
         oak.add(3);
         oak.add(5);
         oak.add(7);
+        oak.add(8);
+        oak.graph();
+        System.out.println(oak);
+        oak.display(Order.INORDER);
+        oak.display(Order.PREORDER);
+        oak.display(Order.POSTORDER);
 
+        oak.delete(4);
         System.out.println(oak);
-//        System.out.println(oak.preOrder(oak.getRoot()));
-//        System.out.println(oak.postOrder(oak.getRoot()));
-//        oak.countLeaves(oak.getRoot());
-//       System.out.println(oak.Height(oak.getRoot()));
+
+        spruce.add(4);
+        spruce.add(9);
+        spruce.add(123908);
+
+
+        oak.add(spruce);
+        System.out.println(oak);
         System.out.println(oak.isAncestor(2, 1));
-        System.out.println(oak.countLeaves(oak.getRoot()));
-        System.out.println(oak);
+        System.out.println(oak.countLeaves()); */
+//        oak.graph();
+
     }
+
+    public void println(Object o) {
+        System.out.println(o);
+    }
+
+    public void print(Object o) {
+        System.out.print(o);
+    }
+
 }
+
+enum Order {
+    INORDER, PREORDER, POSTORDER
+};
 
 class BTree{
     private BNode root;
+
+
 
     public BTree(){
         root=null;
@@ -51,17 +80,17 @@ class BTree{
         }
     }
 
-    public void add(BNode branch, int v){
-        if(v < branch.getVal()){
-            if(branch.getLeft()==null){
+    public void add(BNode branch, int v) {
+        if(v < branch.getVal()) {
+            if(branch.getLeft()==null) {
                 branch.setLeft(new BNode(v));
             }
-            else{
+            else {
                 add(branch.getLeft(), v);
             }
         }
-        if(v > branch.getVal()){
-            if(branch.getRight()==null){
+        if (v > branch.getVal()) {
+            if(branch.getRight()==null) {
                 branch.setRight(new BNode(v));
             }
             else{
@@ -72,7 +101,7 @@ class BTree{
 
 // QUESTION 1 - depth
     public int depth(int num) { // takes an integer and returns the depth of where its found.
-                                // returns -1 if not found.
+        // returns -1 if not found.
 
         return depth(root, num, 0);
     }
@@ -94,8 +123,42 @@ class BTree{
     }
 
 // QUESTION 2 - display
-    public void display() {
 
+    public void display() {
+        display(Order.INORDER);
+    }
+    public void display(Order order) {
+
+        if (order == Order.INORDER) {
+            System.out.println("<" + inorder(root).substring(0, inorder(root).length()-2) + ">");
+        }
+        if (order == Order.PREORDER) {
+            System.out.println("<" + preorder(root).substring(0, preorder(root).length()-2) + ">");
+        }
+        if (order == Order.POSTORDER) {
+            System.out.println("<" + postorder(root).substring(0, postorder(root).length()-2) + ">");
+        }
+    }
+
+    public String inorder(BNode branch) {
+        if (branch == null) {
+            return "";
+        }
+        return inorder(branch.getLeft()) + branch.getVal() + ", " + inorder(branch.getRight());
+    }
+
+    public String preorder(BNode branch) {
+        if (branch == null) {
+            return "";
+        }
+        return branch.getVal() + ", " + preorder(branch.getLeft()) + preorder(branch.getRight());
+    }
+
+    public String postorder(BNode branch) {
+        if (branch == null) {
+            return "";
+        }
+        return postorder(branch.getLeft()) + postorder(branch.getRight()) + branch.getVal() + ", ";
     }
 
 
@@ -114,6 +177,8 @@ class BTree{
         return countLeaves(branch.getLeft()) + countLeaves(branch.getRight());
     }
 
+
+
 // QUESTION 4 - height
     public int height() {
         return height(root);
@@ -123,6 +188,11 @@ class BTree{
         if (branch == null) {
             return 0;
         }
+
+        if (branch.isLeaf()) {
+            return 1;
+        }
+
         return 1 + Math.max(height(branch.getLeft()), height(branch.getRight()));
     }
 
@@ -130,45 +200,94 @@ class BTree{
     public boolean isAncestor(int a, int b) {
 
         BNode ancestor = find(a);
-        
+
         if (find(ancestor, b) != null) {
             return true;
         }
-        
+
         return false;
     }
-    
+
 // QUESTION 6 - delete
+    // keep inorder?
+    public void delete(int val) {
+        root = delete(root, val);
+    }
 
-//    public void delete(int val) {
-//        root = delete(root, val);
-//
-//    }
-//
-//    public BNode delete(BNode branch, int val) {
-//        if (branch == null) {
-//            return null;
-//        }
-//        if (val < branch.getVal()) {
-//            branch.setLeft(delete(branch.getLeft(), val));
-//        }
-//        else if (val > branch.getVal()) {
-//            branch.setRight(delete(branch.getRight(), val));
-//        }
-//        else {
-//            if (branch.getLeft() == null) {
-//                return branch.getRight();
-//            }
-//            else if (branch.getRight() == null) {
-//                return branch.getLeft();
-//            }
-//            branch.setVal(min(branch.getRight()));
-//            branch.setRight(delete(branch.getRight(), branch.getVal()));
-//        }
-//        return branch;
-//    }
+    public BNode delete(BNode branch, int val) {
+        if (branch == null) { // base case
+            return null;
+        }
+
+        if (val < branch.getVal()) {
+            branch.setLeft(delete(branch.getLeft(), val));
+        }
+        else if (val > branch.getVal()) {
+            branch.setRight(delete(branch.getRight(), val));
+        }
+
+        else {
+
+            if (branch.getLeft() == null) {
+                return branch.getRight();
+            }
+            else if (branch.getRight() == null) {
+                return branch.getLeft();
+            }
+
+            branch.setVal(getMin(branch.getRight()).getVal());
+
+            branch.setRight(delete(branch.getRight(), branch.getVal()));
+
+        }
+
+        return branch;
+    }
+
+    public BNode getMin(BNode branch) {
+        if (branch.getLeft() == null) {
+            return branch;
+        }
+        return getMin(branch.getLeft());
+    }
 
 
+// QUESTION 7 - isBalanced
+    public boolean isBalanced() {
+        return isBalanced(root);
+    }
+
+    public boolean isBalanced(BNode branch) {
+        if (branch == null) {
+            return true;
+        }
+        if (Math.abs(height(branch.getLeft()) - height(branch.getRight())) <= 1) {
+            return isBalanced(branch.getLeft()) && isBalanced(branch.getRight());
+        }
+        return false;
+    }
+
+// QUESTION 8 - add
+    // overload add so that it takes a BTree as a parameter. Add copies of all the nodes of the BTree to
+    // the current tree.
+
+    // recurse to add all the nodes of the tree to the current tree
+
+
+    public void add(BTree tree) {
+        add(tree.getRoot());
+    }
+
+    public void add(BNode branch) {
+        if (branch == null) {
+            return;
+        }
+        add(branch.getLeft());
+        add(branch.getRight());
+        add(branch.getVal());
+    }
+
+// ----------------------------------------------
 
     public BNode find(int val) {
         return find(root, val);
@@ -190,10 +309,41 @@ class BTree{
         return null;
     }
 
+
+
+    public void graph() {
+        graph(root, 0);
+    }
+
+    private void graph(BNode node, int depth) {
+        if (node == null) {
+            return;
+        }
+
+        graph(node.getRight(), depth + 1);
+
+        for (int i = 0; i < depth; i++) {
+            System.out.print("   ");
+        }
+
+        System.out.println(node.getVal());
+
+        graph(node.getLeft(), depth + 1);
+    }
+
+
+
+
+
+
+
     @Override
     public String toString(){
-        return "<" + stringify(root) + ">";
+        String str = stringify(root);
+        return "<" + str.substring(0, str.length()-2) + ">";
     }
+
+
 
     public String stringify(BNode branch){
         if(branch==null){
@@ -205,6 +355,11 @@ class BTree{
     public BNode getRoot() {
         return root;
     }
+
+    public void setRoot(BNode r) {
+        root = r;
+    }
+
 
 }
 
@@ -236,6 +391,10 @@ class BNode{
     }
     public void setRight(BNode r){
         right=r;
+    }
+
+    public boolean isLeaf(){
+        return (left==null && right==null);
     }
 
 }
