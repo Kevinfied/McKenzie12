@@ -1,4 +1,12 @@
+/*
+    BTree.java
+    Kevin Xu
 
+    This is a binary search tree class that includes the following:
+    an enum for the order of traversal
+    a BNode class that represents a node in the tree
+
+ */
 import java.util.*;
 import java.io.*;
 
@@ -63,15 +71,16 @@ enum Order {
 };
 
 class BTree{
-    private BNode root;
+    private BNode root; // root of the tree.
 
 
-
+    // constructor
     public BTree(){
         root=null;
     }
 
-    public void add(int v){
+
+    public void add(int v){ // adds a value to the tree
         if(root == null){
             root = new BNode(v);
         }
@@ -79,7 +88,6 @@ class BTree{
             add(root, v);
         }
     }
-
     public void add(BNode branch, int v) {
         if(v < branch.getVal()) {
             if(branch.getLeft()==null) {
@@ -99,7 +107,7 @@ class BTree{
         }
     }
 
-// QUESTION 1 - depth
+    // QUESTION 1 - depth
     public int depth(int num) { // takes an integer and returns the depth of where its found.
         // returns -1 if not found.
 
@@ -162,7 +170,7 @@ class BTree{
     }
 
 
-// QUESTION 3 - countLeaves
+    // QUESTION 3 - countLeaves
     public int countLeaves() {
         return countLeaves(root);
     }
@@ -179,7 +187,7 @@ class BTree{
 
 
 
-// QUESTION 4 - height
+    // QUESTION 4 - height
     public int height() {
         return height(root);
     }
@@ -196,7 +204,7 @@ class BTree{
         return 1 + Math.max(height(branch.getLeft()), height(branch.getRight()));
     }
 
-// QUESTION 5 - isAncestor
+    // QUESTION 5 - isAncestor
     public boolean isAncestor(int a, int b) {
 
         BNode ancestor = find(a);
@@ -208,7 +216,7 @@ class BTree{
         return false;
     }
 
-// QUESTION 6 - delete
+    // QUESTION 6 - delete
     // keep inorder?
     public void delete(int val) {
         root = delete(root, val);
@@ -252,7 +260,7 @@ class BTree{
     }
 
 
-// QUESTION 7 - isBalanced
+    // QUESTION 7 - isBalanced
     public boolean isBalanced() {
         return isBalanced(root);
     }
@@ -289,11 +297,11 @@ class BTree{
 
 // ----------------------------------------------
 
-    public BNode find(int val) {
+    public BNode find(int val) { // returns the node with the given value
         return find(root, val);
     }
 
-    public BNode find(BNode branch, int val) {
+    public BNode find(BNode branch, int val) { // recursive helper method
         if (branch == null || branch.getVal() == val) {
             return branch;
         }
@@ -310,7 +318,8 @@ class BTree{
     }
 
 
-
+    // Graph function that very poorly visualizes the tree.
+    // for debugging. not very useful since it sucks
     public void graph() {
         graph(root, 0);
     }
@@ -343,8 +352,6 @@ class BTree{
         return "<" + str.substring(0, str.length()-2) + ">";
     }
 
-
-
     public String stringify(BNode branch){
         if(branch==null){
             return "";
@@ -364,9 +371,10 @@ class BTree{
 }
 
 class BNode{
-    private int val;
-    private BNode left, right;
+    private int val; // the key of the node
+    private BNode left, right; // the left and right children of the node
 
+    // constructors
     public BNode(int v){
         left = null;
         right = null;
