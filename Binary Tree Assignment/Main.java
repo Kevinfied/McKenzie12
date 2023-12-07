@@ -1,12 +1,4 @@
-/*
-    BTree.java
-    Kevin Xu
 
-    This is a binary search tree class that includes the following:
-    an enum for the order of traversal
-    a BNode class that represents a node in the tree
-
- */
 import java.util.*;
 import java.io.*;
 
@@ -14,6 +6,29 @@ public class Main {
     public static void main(String []args){
         BTree oak = new BTree();
         BTree spruce = new BTree();
+        BTree birch = new BTree();
+
+        birch.add(66);
+        birch.add(81);
+        birch.add(17);
+        birch.add(11);
+        birch.add(43);
+        birch.add(116);
+        birch.add(95);
+        birch.add(120);
+        birch.add(82);
+        birch.add(27);
+        birch.add(53);
+        birch.add(40);
+        birch.add(32);
+
+        System.out.println(birch);
+
+        birch.delete(116);
+        System.out.println(birch);
+        birch.delete(17);
+        System.out.println(birch);
+
 
         oak.add(10);
         oak.add(15);
@@ -71,16 +86,15 @@ enum Order {
 };
 
 class BTree{
-    private BNode root; // root of the tree.
+    private BNode root;
 
 
-    // constructor
+
     public BTree(){
         root=null;
     }
 
-
-    public void add(int v){ // adds a value to the tree
+    public void add(int v){
         if(root == null){
             root = new BNode(v);
         }
@@ -88,6 +102,7 @@ class BTree{
             add(root, v);
         }
     }
+
     public void add(BNode branch, int v) {
         if(v < branch.getVal()) {
             if(branch.getLeft()==null) {
@@ -107,7 +122,7 @@ class BTree{
         }
     }
 
-    // QUESTION 1 - depth
+// QUESTION 1 - depth
     public int depth(int num) { // takes an integer and returns the depth of where its found.
         // returns -1 if not found.
 
@@ -170,7 +185,7 @@ class BTree{
     }
 
 
-    // QUESTION 3 - countLeaves
+// QUESTION 3 - countLeaves
     public int countLeaves() {
         return countLeaves(root);
     }
@@ -187,7 +202,7 @@ class BTree{
 
 
 
-    // QUESTION 4 - height
+// QUESTION 4 - height
     public int height() {
         return height(root);
     }
@@ -204,7 +219,7 @@ class BTree{
         return 1 + Math.max(height(branch.getLeft()), height(branch.getRight()));
     }
 
-    // QUESTION 5 - isAncestor
+// QUESTION 5 - isAncestor
     public boolean isAncestor(int a, int b) {
 
         BNode ancestor = find(a);
@@ -216,7 +231,7 @@ class BTree{
         return false;
     }
 
-    // QUESTION 6 - delete
+// QUESTION 6 - delete
     // keep inorder?
     public void delete(int val) {
         root = delete(root, val);
@@ -226,29 +241,23 @@ class BTree{
         if (branch == null) { // base case
             return null;
         }
-
-        if (val < branch.getVal()) {
-            branch.setLeft(delete(branch.getLeft(), val));
+        if (val < branch.getVal()) { // if val is less than the current node, go left
+            branch.setLeft(delete(branch.getLeft(), val)); // set the left node to recursed left node
         }
-        else if (val > branch.getVal()) {
+        else if (val > branch.getVal()) { // if val is greater than the current node, go right
             branch.setRight(delete(branch.getRight(), val));
         }
-
         else {
-
             if (branch.getLeft() == null) {
                 return branch.getRight();
             }
             else if (branch.getRight() == null) {
                 return branch.getLeft();
             }
-
             branch.setVal(getMin(branch.getRight()).getVal());
 
             branch.setRight(delete(branch.getRight(), branch.getVal()));
-
         }
-
         return branch;
     }
 
@@ -260,20 +269,12 @@ class BTree{
     }
 
 
-    // QUESTION 7 - isBalanced
+// QUESTION 7 - isBalanced
+    // in a balanced tree, nulls can only happen in the bottom two rows
     public boolean isBalanced() {
-        return isBalanced(root);
+        return height(root) - minHeight(root) <= 1;
     }
 
-    public boolean isBalanced(BNode branch) {
-        if (branch == null) {
-            return true;
-        }
-        if (Math.abs(height(branch.getLeft()) - height(branch.getRight())) <= 1) {
-            return isBalanced(branch.getLeft()) && isBalanced(branch.getRight());
-        }
-        return false;
-    }
 
 // QUESTION 8 - add
     // overload add so that it takes a BTree as a parameter. Add copies of all the nodes of the BTree to
@@ -297,11 +298,11 @@ class BTree{
 
 // ----------------------------------------------
 
-    public BNode find(int val) { // returns the node with the given value
+    public BNode find(int val) {
         return find(root, val);
     }
 
-    public BNode find(BNode branch, int val) { // recursive helper method
+    public BNode find(BNode branch, int val) {
         if (branch == null || branch.getVal() == val) {
             return branch;
         }
@@ -317,9 +318,23 @@ class BTree{
         return null;
     }
 
+    public int minHeight() {
+        return minHeight(root);
+    }
 
-    // Graph function that very poorly visualizes the tree.
-    // for debugging. not very useful since it sucks
+    public int minHeight(BNode branch) {
+        if (branch == null) {
+            return 0;
+        }
+
+        if (branch.isLeaf()) {
+            return 1;
+        }
+
+        return 1 + Math.min(minHeight(branch.getLeft()), minHeight(branch.getRight()));
+    }
+
+
     public void graph() {
         graph(root, 0);
     }
@@ -352,6 +367,8 @@ class BTree{
         return "<" + str.substring(0, str.length()-2) + ">";
     }
 
+
+
     public String stringify(BNode branch){
         if(branch==null){
             return "";
@@ -371,10 +388,9 @@ class BTree{
 }
 
 class BNode{
-    private int val; // the key of the node
-    private BNode left, right; // the left and right children of the node
+    private int val;
+    private BNode left, right;
 
-    // constructors
     public BNode(int v){
         left = null;
         right = null;
